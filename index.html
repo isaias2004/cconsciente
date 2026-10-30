@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cuidar Consciente · Psicología y bienestar</title>
+  <meta name="description" content="Espacio de psicología y bienestar emocional. Conocé al equipo, las novedades y los próximos cursos.">
+  <meta name="theme-color" content="#F4F7F5">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+
+  <header class="topbar" id="topbar">
+    <div class="wrap topbar__in">
+      <a class="brand" href="#inicio" aria-label="Cuidar Consciente, ir al inicio">
+        <span class="brand__dot" aria-hidden="true"></span>
+        <span>Cuidar Consciente</span>
+      </a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" aria-label="Abrir menú">
+        <span></span><span></span>
+      </button>
+      <nav class="nav" id="nav" aria-label="Principal">
+        <a href="#equipo">Equipo</a>
+        <a href="#novedades">Novedades</a>
+        <a href="#redes">Redes</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="hero" id="inicio">
+      <div class="wrap hero__in">
+        <div class="hero__text">
+          <h1>Un espacio para cuidarte con conciencia.</h1>
+          <p class="lead">Acompañamiento psicológico y propuestas de bienestar para volver a escucharte, a tu ritmo.</p>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#contacto" id="ctaContacto">Escribinos</a>
+            <a class="btn btn--ghost" href="#novedades">Ver novedades</a>
+          </div>
+        </div>
+        <div class="breath" aria-hidden="true">
+          <span class="breath__ring breath__ring--3"></span>
+          <span class="breath__ring breath__ring--2"></span>
+          <span class="breath__ring breath__ring--1"></span>
+          <span class="breath__word" id="breathWord">Inhalá</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="equipo" aria-labelledby="equipo-t">
+      <div class="wrap">
+        <header class="section__head">
+          <h2 id="equipo-t">Quiénes te acompañan</h2>
+          <p>Un equipo de profesionales con formación y trato cercano.</p>
+        </header>
+        <div class="team" id="teamGrid"></div>
+      </div>
+    </section>
+
+    <section class="section section--tint" id="novedades" aria-labelledby="nov-t">
+      <div class="wrap wrap--narrow">
+        <header class="section__head">
+          <h2 id="nov-t">Novedades</h2>
+          <p>Cursos, talleres y avisos. Se actualiza todas las semanas.</p>
+        </header>
+        <div class="filters" id="filters" role="group" aria-label="Filtrar novedades"></div>
+        <div class="feed" id="feed"></div>
+        <button class="btn btn--ghost feed__more" id="moreBtn" hidden>Ver novedades anteriores</button>
+      </div>
+    </section>
+
+    <section class="section" id="redes" aria-labelledby="redes-t">
+      <div class="wrap wrap--narrow">
+        <header class="section__head">
+          <h2 id="redes-t">Seguinos</h2>
+          <p>Contenido, avisos y un canal directo para consultas.</p>
+        </header>
+        <ul class="social" id="socialList"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="contacto">
+    <div class="wrap footer__in">
+      <p class="footer__brand">Cuidar Consciente</p>
+      <p class="footer__note" id="footerNote"></p>
+      <p class="footer__small">© <span id="year"></span> Cuidar Consciente. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Datos editables: se cargan como scripts comunes para que el sitio funcione también abriendo index.html directo -->
+  <script src="data/config.js"></script>
+  <script src="data/profesionales.js"></script>
+  <script src="data/novedades.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
