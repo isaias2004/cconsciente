@@ -1,210 +1,481 @@
-/* Cuidar Consciente — lógica del sitio (sin dependencias).
-   Los contenidos se editan en la carpeta /data, no acá. */
 (function () {
   "use strict";
 
-  var CONFIG = window.CONFIG || {};
-  var PROFESIONALES = window.PROFESIONALES || [];
-  var NOVEDADES = window.NOVEDADES || [];
+  const CONFIG = window.CONFIG || {};
+  const PROFESIONALES = window.PROFESIONALES || [];
+  const ACTIVIDADES = window.ACTIVIDADES || {};
+  const PUBLICACIONES = window.PUBLICACIONES || [];
 
-  /* ---------- utilidades ---------- */
-  function el(tag, attrs, children) {
-    var node = document.createElement(tag);
-    Object.keys(attrs || {}).forEach(function (k) {
-      if (k === "class") node.className = attrs[k];
-      else if (k === "text") node.textContent = attrs[k];
-      else node.setAttribute(k, attrs[k]);
-    });
-    (children || []).forEach(function (c) { if (c) node.appendChild(c); });
-    return node;
+  // ELEMENTOS Y UTILIDADES
+
+  function get(id) {
+    return document.getElementById(id);
   }
 
-  function parseFecha(str) {
-    // "2026-10-30" -> fecha local (evita el corrimiento por zona horaria)
-    var p = String(str).split("-");
-    return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
-  }
+  function createElement(tag, className, text) {
+    const element = document.createElement(tag);
 
-  function formatFecha(str) {
-    return parseFecha(str).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" });
-  }
-
-  function iniciales(nombre) {
-    var limpio = nombre.replace(/^(lic\.|dra?\.|mg\.|psic\.)\s*/i, "");
-    return limpio.split(/\s+/).slice(0, 2).map(function (w) { return w.charAt(0).toUpperCase(); }).join("");
-  }
-
-  function urlSegura(url) {
-    return /^(https?:|mailto:|tel:)/i.test(url) ? url : "#";
-  }
-
-  /* ---------- iconos de redes ---------- */
-  var ICONOS = {
-    instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>',
-    whatsapp: '<path d="M3.5 20.5l1.4-4.3A8.6 8.6 0 1 1 8 19.3l-4.5 1.2z"/><path d="M9 8.5c0 3.2 3.3 6.5 6.5 6.5l1-1.6-2.100-1-.9.8c-.9-.4-1.700-1.200-2.100-2.100l.8-.9-1-2.100L9 8.500z"/>',
-    facebook: '<path d="M14 21v-8h2.800l.5-3.400H14V7.500c0-1 .5-1.700 1.800-1.700h1.600V3c-.4 0-1.400-.2-2.500-.2-2.500 0-4.200 1.500-4.200 4.200v2.600H7.800V13h2.900v8H14z"/>',
-    tiktok: '<path d="M14 3.500v11.200a3.700 3.700 0 1 1-3.700-3.700"/><path d="M14 3.500c.3 2.600 1.900 4.200 4.500 4.400"/>',
-    youtube: '<rect x="2.500" y="5.500" width="19" height="13" rx="4"/><path d="M10.300 9.300v5.400l4.600-2.700-4.600-2.700z" fill="currentColor"/>',
-    linkedin: '<path d="M6 9.500V20M6 5.500v.01M11 20v-6.200a3 3 0 0 1 6 0V20M11 9.500V20"/>',
-    email: '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.500 7.500l8.500 6 8.500-6"/>',
-    web: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.600 2.700 3.800 5.700 3.800 9s-1.200 6.300-3.800 9c-2.600-2.700-3.800-5.700-3.800-9S9.400 5.700 12 3z"/>'
-  };
-
-  /* ---------- barra superior y menú móvil ---------- */
-  var topbar = document.getElementById("topbar");
-  var menuBtn = document.getElementById("menuBtn");
-  var nav = document.getElementById("nav");
-
-  function cerrarMenu() {
-    nav.classList.remove("is-open");
-    menuBtn.setAttribute("aria-expanded", "false");
-    menuBtn.setAttribute("aria-label", "Abrir menú");
-  }
-  menuBtn.addEventListener("click", function () {
-    var abierto = nav.classList.toggle("is-open");
-    menuBtn.setAttribute("aria-expanded", String(abierto));
-    menuBtn.setAttribute("aria-label", abierto ? "Cerrar menú" : "Abrir menú");
-  });
-  nav.addEventListener("click", function (e) { if (e.target.tagName === "A") cerrarMenu(); });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") cerrarMenu(); });
-  window.addEventListener("scroll", function () {
-    topbar.classList.toggle("is-scrolled", window.scrollY > 8);
-  }, { passive: true });
-
-  /* ---------- respiración del hero ---------- */
-  var breathWord = document.getElementById("breathWord");
-  var inhala = true;
-  setInterval(function () {
-    inhala = !inhala;
-    breathWord.textContent = inhala ? "Inhalá" : "Exhalá";
-  }, 4000);
-
-  /* ---------- equipo ---------- */
-  var teamGrid = document.getElementById("teamGrid");
-  PROFESIONALES.forEach(function (p) {
-    var foto = el("div", { class: "person__photo" });
-    var fallback = function () {
-      foto.textContent = "";
-      foto.appendChild(el("div", { class: "person__initials", text: iniciales(p.nombre), "aria-hidden": "true" }));
-    };
-    if (p.foto) {
-      var img = el("img", { src: p.foto, alt: "Foto de " + p.nombre, loading: "lazy", width: "480", height: "600" });
-      img.addEventListener("error", fallback);
-      foto.appendChild(img);
-    } else {
-      fallback();
+    if (className) {
+      element.className = className;
     }
-    teamGrid.appendChild(el("article", { class: "person" }, [
-      foto,
-      el("h3", { text: p.nombre }),
-      p.rol ? el("p", { class: "person__role", text: p.rol }) : null,
-      el("p", { class: "person__bio", text: p.descripcion })
-    ]));
-  });
 
-  /* ---------- novedades ---------- */
-  var feed = document.getElementById("feed");
-  var filtersBox = document.getElementById("filters");
-  var moreBtn = document.getElementById("moreBtn");
-  var POR_PAGINA = 4;
-
-  var posts = NOVEDADES.slice().sort(function (a, b) {
-    return parseFecha(b.fecha) - parseFecha(a.fecha);
-  });
-  var etiquetaActiva = "Todas";
-  var visibles = POR_PAGINA;
-
-  function postNode(n) {
-    var cuerpo = Array.isArray(n.texto) ? n.texto : [n.texto];
-    var textoBox = el("div", { class: "post__text" }, cuerpo.map(function (t) { return el("p", { text: t }); }));
-    var meta = el("div", { class: "post__meta" }, [
-      el("time", { datetime: n.fecha, text: formatFecha(n.fecha) }),
-      n.etiqueta ? el("span", { class: "tag", text: n.etiqueta }) : null
-    ]);
-    var body = el("div", { class: "post__body" }, [meta, el("h3", { text: n.titulo }), textoBox]);
-    if (n.enlace && n.enlace.url) {
-      var a = el("a", { class: "post__link", href: urlSegura(n.enlace.url), text: n.enlace.texto || "Más información" });
-      if (/^https?:/i.test(n.enlace.url)) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
-      body.appendChild(a);
+    if (text !== undefined && text !== null) {
+      element.textContent = text;
     }
-    var art = el("article", { class: "post" });
-    if (n.imagen) {
-      var img = el("img", { class: "post__img", src: n.imagen, alt: n.imagenAlt || "", loading: "lazy" });
-      img.addEventListener("error", function () { img.remove(); });
-      art.appendChild(img);
-    }
-    art.appendChild(body);
-    return art;
+
+    return element;
   }
 
-  function renderFeed() {
-    var lista = posts.filter(function (n) { return etiquetaActiva === "Todas" || n.etiqueta === etiquetaActiva; });
-    feed.textContent = "";
-    if (!lista.length) {
-      feed.appendChild(el("p", { class: "empty", text: "Todavía no hay novedades en esta categoría." }));
-    }
-    lista.slice(0, visibles).forEach(function (n) { feed.appendChild(postNode(n)); });
-    moreBtn.hidden = lista.length <= visibles;
+  function whatsappUrl(number, message) {
+    const cleanNumber = String(number || "").replace(/\D/g, "");
+
+    if (!cleanNumber) return "#";
+
+    return (
+      "https://wa.me/" +
+      cleanNumber +
+      "?text=" +
+      encodeURIComponent(message || "Hola, quisiera realizar una consulta.")
+    );
   }
 
-  function renderFiltros() {
-    var etiquetas = ["Todas"];
-    posts.forEach(function (n) { if (n.etiqueta && etiquetas.indexOf(n.etiqueta) === -1) etiquetas.push(n.etiqueta); });
-    if (etiquetas.length <= 2) { filtersBox.hidden = true; return; }
-    etiquetas.forEach(function (t) {
-      var b = el("button", { class: "chip", type: "button", "aria-pressed": String(t === etiquetaActiva), text: t });
-      b.addEventListener("click", function () {
-        etiquetaActiva = t;
-        visibles = POR_PAGINA;
-        Array.prototype.forEach.call(filtersBox.children, function (c) {
-          c.setAttribute("aria-pressed", String(c === b));
-        });
-        renderFeed();
+  function safeUrl(url) {
+    try {
+      const parsed = new URL(url, window.location.href);
+
+      if (["http:", "https:", "mailto:"].includes(parsed.protocol)) {
+        return parsed.href;
+      }
+    } catch (error) {
+      return "#";
+    }
+
+    return "#";
+  }
+
+  function formatDate(dateString) {
+    if (!dateString) return "";
+
+    // Interpretamos la fecha como una fecha local para evitar
+    // que se muestre el día anterior por diferencias horarias.
+    const parts = dateString.split("-");
+
+    if (parts.length !== 3) return dateString;
+
+    const date = new Date(
+      Number(parts[0]),
+      Number(parts[1]) - 1,
+      Number(parts[2])
+    );
+
+    if (Number.isNaN(date.getTime())) return dateString;
+
+    return new Intl.DateTimeFormat("es-AR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }).format(date);
+  }
+
+  function setExternalLink(element, url) {
+    if (!element) return;
+
+    const validUrl = safeUrl(url);
+
+    if (validUrl === "#") {
+      element.hidden = true;
+      return;
+    }
+
+    element.href = validUrl;
+    element.target = "_blank";
+    element.rel = "noopener noreferrer";
+  }
+
+  // PERFIL PRINCIPAL
+
+  function renderProfile() {
+    const name = get("profileName");
+    const description = get("profileDescription");
+    const image = get("profileImage");
+    const credentials = get("credentials");
+    const social = get("profileSocial");
+
+    if (name) name.textContent = CONFIG.nombre || "Cuidar Consciente";
+
+    if (description) {
+      description.textContent = CONFIG.descripcion || "";
+    }
+
+    if (image && CONFIG.foto) {
+      image.src = CONFIG.foto;
+      image.alt = "Foto de " + (CONFIG.nombre || "la profesional");
+    }
+
+    if (credentials) {
+      credentials.replaceChildren();
+
+      (CONFIG.formacion || []).forEach(function (item) {
+        credentials.appendChild(
+          createElement("span", "credential", item)
+        );
       });
-      filtersBox.appendChild(b);
+    }
+
+    if (social) {
+      social.replaceChildren();
+
+      if (CONFIG.instagram) {
+        const instagram = createElement("a", "", "Instagram");
+        setExternalLink(instagram, CONFIG.instagram);
+        social.appendChild(instagram);
+      }
+    }
+  }
+
+  // PROFESIONALES
+
+  function renderProfessionals() {
+    const container = get("professionalsGrid");
+
+    if (!container) return;
+
+    container.replaceChildren();
+
+    if (!PROFESIONALES.length) {
+      container.appendChild(
+        createElement(
+          "p",
+          "empty-state",
+          "Próximamente conocerás a nuestro equipo profesional."
+        )
+      );
+      return;
+    }
+
+    PROFESIONALES.forEach(function (person) {
+      const card = createElement("article", "professional-card");
+
+      const image = createElement("img", "professional-card__image");
+      image.src = person.foto || "";
+      image.alt = "Foto de " + person.nombre;
+      image.loading = "lazy";
+
+      image.addEventListener("error", function () {
+        image.hidden = true;
+      });
+
+      card.appendChild(image);
+
+      card.appendChild(
+        createElement("h3", "", person.nombre)
+      );
+
+      const specialties = createElement(
+        "p",
+        "professional-card__specialties",
+        (person.especialidades || []).join(" · ")
+      );
+
+      card.appendChild(specialties);
+
+      card.appendChild(
+        createElement(
+          "p",
+          "professional-card__description",
+          person.descripcion || ""
+        )
+      );
+
+      const number = person.whatsapp || CONFIG.whatsapp;
+
+      const button = createElement(
+        "a",
+        "button button--primary",
+        "Consultar por WhatsApp"
+      );
+
+      button.href = whatsappUrl(
+        number,
+        "Hola, quisiera consultar por los servicios de " + person.nombre + "."
+      );
+
+      button.target = "_blank";
+      button.rel = "noopener noreferrer";
+
+      card.appendChild(button);
+
+      container.appendChild(card);
     });
   }
 
-  moreBtn.addEventListener("click", function () { visibles += POR_PAGINA; renderFeed(); });
-  renderFiltros();
-  renderFeed();
+  // ACTIVIDADES
 
-  /* ---------- redes ---------- */
-  var socialList = document.getElementById("socialList");
-  (CONFIG.redes || []).forEach(function (r) {
-    var icono = el("span", { class: "social__icon", "aria-hidden": "true" });
-    icono.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">' + (ICONOS[r.icono] || ICONOS.web) + "</svg>";
-    var a = el("a", { href: urlSegura(r.url) }, [
-      icono,
-      el("span", {}, [
-        el("span", { class: "social__name", text: r.nombre }),
-        r.usuario ? el("span", { class: "social__user", text: r.usuario }) : null
-      ])
-    ]);
-    if (/^https?:/i.test(r.url)) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
-    socialList.appendChild(el("li", {}, [a]));
-  });
+  function renderActivities(items, containerId, emptyMessage) {
+    const container = get(containerId);
 
-  /* ---------- contacto y pie ---------- */
-  var cta = document.getElementById("ctaContacto");
-  if (CONFIG.contactoUrl) {
-    cta.href = urlSegura(CONFIG.contactoUrl);
-    if (/^https?:/i.test(CONFIG.contactoUrl)) { cta.target = "_blank"; cta.rel = "noopener noreferrer"; }
-  }
-  document.getElementById("footerNote").textContent = CONFIG.notaPie || "";
-  document.getElementById("year").textContent = new Date().getFullYear();
+    if (!container) return;
 
-  /* ---------- sección activa en el menú ---------- */
-  if ("IntersectionObserver" in window) {
-    var links = {};
-    Array.prototype.forEach.call(nav.querySelectorAll("a"), function (a) { links[a.getAttribute("href").slice(1)] = a; });
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting && links[en.target.id]) {
-          Object.keys(links).forEach(function (k) { links[k].classList.toggle("is-active", k === en.target.id); });
+    container.replaceChildren();
+
+    if (!items || !items.length) {
+      container.appendChild(
+        createElement("p", "empty-state", emptyMessage)
+      );
+      return;
+    }
+
+    items.forEach(function (activity) {
+      const card = createElement("article", "activity-card");
+
+      const dateText = [
+        formatDate(activity.fecha),
+        activity.hora ? " · " + activity.hora + " hs" : ""
+      ].join("");
+
+      card.appendChild(
+        createElement("span", "activity-card__date", dateText)
+      );
+
+      card.appendChild(
+        createElement("h4", "", activity.titulo)
+      );
+
+      card.appendChild(
+        createElement("p", "", activity.descripcion)
+      );
+
+      const details = [
+        activity.modalidad,
+        activity.precio
+      ].filter(Boolean).join(" · ");
+
+      if (details) {
+        card.appendChild(
+          createElement("div", "activity-card__details", details)
+        );
+      }
+
+      if (activity.enlace) {
+        const button = createElement(
+          "a",
+          "button button--primary",
+          activity.boton || "Más información"
+        );
+
+        setExternalLink(button, activity.enlace);
+
+        if (!button.hidden) {
+          card.appendChild(button);
         }
-      });
-    }, { rootMargin: "-45% 0px -50% 0px" });
-    Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+      }
+
+      container.appendChild(card);
+    });
   }
+
+  function renderAllActivities() {
+    renderActivities(
+      ACTIVIDADES.gratuitos,
+      "freeActivities",
+      "Próximamente anunciaremos nuevos vivos gratuitos."
+    );
+
+    renderActivities(
+      ACTIVIDADES.pagos,
+      "paidActivities",
+      "Próximamente compartiremos nuevos encuentros y talleres."
+    );
+  }
+
+  // PUBLICACIONES
+
+  function renderPublications() {
+    const container = get("publicationsGrid");
+
+    if (!container) return;
+
+    container.replaceChildren();
+
+    if (!PUBLICACIONES.length) {
+      container.appendChild(
+        createElement(
+          "p",
+          "empty-state",
+          "Próximamente compartiremos nuevos escritos y publicaciones."
+        )
+      );
+      return;
+    }
+
+    PUBLICACIONES.forEach(function (publication) {
+      const card = createElement("article", "publication-card");
+
+      if (publication.imagen) {
+        const image = createElement(
+          "img",
+          "publication-card__image"
+        );
+
+        image.src = publication.imagen;
+        image.alt = publication.titulo || "Imagen de publicación";
+        image.loading = "lazy";
+
+        image.addEventListener("error", function () {
+          image.hidden = true;
+        });
+
+        card.appendChild(image);
+      }
+
+      const content = createElement(
+        "div",
+        "publication-card__content"
+      );
+
+      content.appendChild(
+        createElement(
+          "span",
+          "publication-card__category",
+          publication.categoria || "Publicación"
+        )
+      );
+
+      content.appendChild(
+        createElement("h3", "", publication.titulo)
+      );
+
+      content.appendChild(
+        createElement("p", "", publication.descripcion || "")
+      );
+
+      if (publication.fecha) {
+        content.appendChild(
+          createElement(
+            "p",
+            "publication-card__category",
+            formatDate(publication.fecha)
+          )
+        );
+      }
+
+      if (publication.enlace) {
+        const link = createElement(
+          "a",
+          "text-link",
+          "Leer publicación ↗"
+        );
+
+        setExternalLink(link, publication.enlace);
+
+        if (!link.hidden) {
+          content.appendChild(link);
+        }
+      }
+
+      card.appendChild(content);
+      container.appendChild(card);
+    });
+  }
+
+  // CONTACTO Y REDES
+
+  function renderContact() {
+    const mainWhatsapp = get("mainWhatsapp");
+    const communityLink = get("communityLink");
+    const instagramLink = get("instagramLink");
+    const collaborationButton = get("collaborationButton");
+
+    setExternalLink(
+      mainWhatsapp,
+      whatsappUrl(CONFIG.whatsapp, CONFIG.mensajeWhatsapp)
+    );
+
+    setExternalLink(
+      communityLink,
+      CONFIG.grupoComunidad
+    );
+
+    setExternalLink(
+      instagramLink,
+      CONFIG.instagram
+    );
+
+    if (collaborationButton) {
+      const collaborationNumber =
+        CONFIG.colaboracionesWhatsapp || CONFIG.whatsapp;
+
+      if (CONFIG.colaboracionesEmail) {
+        collaborationButton.href =
+          "mailto:" + CONFIG.colaboracionesEmail +
+          "?subject=" + encodeURIComponent("Propuesta de colaboración");
+      } else {
+        collaborationButton.href = whatsappUrl(
+          collaborationNumber,
+          "Hola, quisiera acercarte una propuesta de colaboración."
+        );
+      }
+
+      collaborationButton.target = "_blank";
+      collaborationButton.rel = "noopener noreferrer";
+    }
+  }
+
+  // MENÚ MÓVIL
+
+  function setupMenu() {
+    const toggle = get("menuToggle");
+    const nav = get("nav");
+
+    if (!toggle || !nav) return;
+
+    toggle.addEventListener("click", function () {
+      const isOpen = nav.classList.toggle("is-open");
+
+      toggle.setAttribute("aria-expanded", String(isOpen));
+      toggle.setAttribute(
+        "aria-label",
+        isOpen ? "Cerrar menú" : "Abrir menú"
+      );
+    });
+
+    nav.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        nav.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Abrir menú");
+      });
+    });
+  }
+
+  // PIE DE PÁGINA
+
+  function renderFooter() {
+    const year = get("currentYear");
+    const footerText = get("footerText");
+
+    if (year) {
+      year.textContent = new Date().getFullYear();
+    }
+
+    if (footerText) {
+      footerText.textContent =
+        CONFIG.textoFooter || "Un espacio para compartir.";
+    }
+  }
+
+  // INICIALIZACIÓN
+
+  function init() {
+    renderProfile();
+    renderProfessionals();
+    renderAllActivities();
+    renderPublications();
+    renderContact();
+    renderFooter();
+    setupMenu();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+
 })();

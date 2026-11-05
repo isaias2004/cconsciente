@@ -1,20 +1,39 @@
-/* Datos generales del sitio.
-   Reemplazá los valores de ejemplo por los reales. */
 window.CONFIG = {
-  // Botón "Escribinos" del inicio. Puede ser WhatsApp, un mail o cualquier enlace.
-  // WhatsApp: https://wa.me/54911XXXXXXXX  (código de país + área sin 0 + número sin 15)
-  contactoUrl: "https://wa.me/5491135993171?text=Hola%2C%20quisiera%20hacer%20una%20consulta.",
+  nombre: "Lic. María Rosende",
 
-  // Texto del pie de página
-  notaPie: "Este sitio es informativo y no reemplaza una consulta profesional. Ante una urgencia, comunicate con los servicios de emergencia de tu zona.",
+  descripcion:
+    "Un espacio de acompañamiento, escucha y orientación para transitar la maternidad, la crianza y las distintas etapas de la vida.",
 
-  // Redes. Íconos disponibles: instagram, whatsapp, facebook, tiktok, youtube, linkedin, email, web
-  redes: [
-    { nombre: "Instagram", usuario: "@cuidar.consciente", url: "https://www.instagram.com/cuidar.consciente/", icono: "instagram" },
-    { nombre: "WhatsApp", usuario: "Consultas y turnos", url: "https://wa.me/54911XXXXXXXX", icono: "whatsapp" },
-    { nombre: "Facebook",  usuario: "Lic. María Rosende",  url: "https://www.facebook.com/Lic.mariarosende", icono: "facebook" },
-    { nombre: "TikTok",    usuario: "@merirosende",       url: "https://www.tiktok.com/@merirosende", icono: "tiktok" },
-    { nombre: "YouTube",   usuario: "Cuidar Consciente",  url: "https://www.youtube.com/@...", icono: "youtube" },
-    // { nombre: "Email",     usuario: "hola@dominio.com",   url: "mailto:hola@dominio.com", icono: "email" }
-  ]
+  foto: "img/perfil.jpg",
+
+  formacion: [
+    "Psicoanalista de niños y adolescentes",
+    "Psicóloga perinatal y de la primera infancia",
+    "Asesora en lactancia materna",
+    "Formación en psicomotricidad",
+    "Duelo perinatal y nacimiento respetado",
+    "Estimulación temprana y cuidados del recién nacido"
+  ],
+
+  whatsapp: "5491135993171",
+
+  mensajeWhatsapp:
+    "Hola, quisiera realizar una consulta.",
+
+  instagram:
+    "https://www.instagram.com/cuidar.consciente/",
+
+  grupoComunidad:
+    "PEGAR_AQUI_EL_LINK_DEL_GRUPO_ENTRE_NOSOTRAS",
+
+  colaboracionesEmail:
+    "",
+
+  colaboracionesWhatsapp:
+    "5491135993171",
+
+  seguidores: "44.000+",
+
+  textoFooter:
+    "Un espacio de encuentro, escucha y bienestar."
 };

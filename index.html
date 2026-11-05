@@ -1,101 +1,238 @@
 <!DOCTYPE html>
-<html lang="es-AR">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cuidar Consciente · Psicología y bienestar</title>
-  <meta name="description" content="Espacio de psicología y bienestar emocional. Conocé al equipo, las novedades y los próximos cursos.">
-  <meta name="theme-color" content="#F4F7F5">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Cuidar Consciente | Psicología y bienestar</title>
+  <meta name="description" content="Un espacio de psicología, maternidad, crianza y bienestar. Conocé al equipo, participá de encuentros y leé nuestras publicaciones.">
+  <meta name="theme-color" content="#f7f5f1">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-  <a class="skip" href="#contenido">Saltar al contenido</a>
 
-  <header class="topbar" id="topbar">
-    <div class="wrap topbar__in">
-      <a class="brand" href="#inicio" aria-label="Cuidar Consciente, ir al inicio">
-        <span class="brand__dot" aria-hidden="true"></span>
-        <span>Cuidar Consciente</span>
-      </a>
-      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" aria-label="Abrir menú">
-        <span></span><span></span>
-      </button>
-      <nav class="nav" id="nav" aria-label="Principal">
-        <a href="#equipo">Equipo</a>
-        <a href="#novedades">Novedades</a>
-        <a href="#redes">Redes</a>
-      </nav>
-    </div>
+<body>
+
+  <header class="header">
+    <a href="#inicio" class="brand">Cuidar <span>Consciente</span></a>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="nav" id="nav">
+      <a href="#equipo">Profesionales</a>
+      <a href="#actividades">Encuentros</a>
+      <a href="#publicaciones">Publicaciones</a>
+      <a href="#colaboraciones">Trabajá conmigo</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
   </header>
 
-  <main id="contenido">
-    <section class="hero" id="inicio">
-      <div class="wrap hero__in">
-        <div class="hero__text">
-          <h1>Un espacio para cuidarte con conciencia.</h1>
-          <p class="lead">Acompañamiento psicológico y propuestas de bienestar para volver a escucharte, a tu ritmo.</p>
-          <div class="hero__cta">
-            <a class="btn btn--primary" href="#contacto" id="ctaContacto">Escribinos</a>
-            <a class="btn btn--ghost" href="#novedades">Ver novedades</a>
+  <main>
+
+    <!-- PERFIL PRINCIPAL -->
+    <section class="profile section" id="inicio">
+      <div class="profile__image-wrap">
+        <img
+          id="profileImage"
+          src="img/perfil.jpg"
+          alt="Foto profesional"
+          class="profile__image"
+        >
+      </div>
+
+      <div class="profile__content">
+        <span class="eyebrow">PSICOLOGÍA · MATERNIDAD · BIENESTAR</span>
+
+        <h1 id="profileName">Lic. María Rosende</h1>
+
+        <p class="profile__description" id="profileDescription">
+          Un espacio de acompañamiento, escucha y orientación para transitar
+          la maternidad, la crianza y las distintas etapas de la vida.
+        </p>
+
+        <div class="credentials" id="credentials"></div>
+
+        <div class="profile__actions">
+          <a href="#contacto" class="button button--primary">Contactame</a>
+          <a href="#actividades" class="button button--outline">Ver encuentros</a>
+        </div>
+
+        <div class="profile__social" id="profileSocial"></div>
+      </div>
+    </section>
+
+    <!-- PRESENTACIÓN -->
+    <section class="intro section">
+      <span class="eyebrow">UN ESPACIO PARA ACOMPAÑAR</span>
+      <h2>Un lugar para encontrarnos, aprender y crecer.</h2>
+      <p>
+        Creemos en la importancia de construir espacios de escucha,
+        información y acompañamiento respetuoso. Queremos acercarte
+        herramientas, experiencias y profesionales que puedan acompañarte
+        en cada etapa.
+      </p>
+    </section>
+
+    <!-- EQUIPO -->
+    <section class="section section--soft" id="equipo">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">QUIÉNES SOMOS</span>
+          <h2>Conocé al equipo</h2>
+        </div>
+        <p>
+          Profesionales de distintas áreas que comparten una mirada
+          integral y comprometida con el bienestar.
+        </p>
+      </div>
+
+      <div class="professionals-grid" id="professionalsGrid"></div>
+    </section>
+
+    <!-- ACTIVIDADES -->
+    <section class="section" id="actividades">
+      <div class="section-heading section-heading--center">
+        <span class="eyebrow">APRENDER Y COMPARTIR</span>
+        <h2>Encuentros y actividades</h2>
+        <p>
+          Propuestas para aprender, compartir experiencias y construir
+          herramientas en comunidad.
+        </p>
+      </div>
+
+      <div class="activities-block">
+        <div class="block-heading">
+          <div>
+            <span class="eyebrow">ACCESO LIBRE</span>
+            <h3>Vivos gratuitos</h3>
           </div>
+          <span class="block-icon">♡</span>
         </div>
-        <div class="breath" aria-hidden="true">
-          <span class="breath__ring breath__ring--3"></span>
-          <span class="breath__ring breath__ring--2"></span>
-          <span class="breath__ring breath__ring--1"></span>
-          <span class="breath__word" id="breathWord">Inhalá</span>
+
+        <div class="activities-grid" id="freeActivities"></div>
+      </div>
+
+      <div class="activities-block activities-block--paid">
+        <div class="block-heading">
+          <div>
+            <span class="eyebrow">PROPUESTAS ESPECIALES</span>
+            <h3>Encuentros pagos</h3>
+          </div>
+          <span class="block-icon">✦</span>
         </div>
+
+        <div class="activities-grid" id="paidActivities"></div>
       </div>
     </section>
 
-    <section class="section" id="equipo" aria-labelledby="equipo-t">
-      <div class="wrap">
-        <header class="section__head">
-          <h2 id="equipo-t">Quiénes te acompañan</h2>
-          <p>Un equipo de profesionales con formación y trato cercano.</p>
-        </header>
-        <div class="team" id="teamGrid"></div>
+    <!-- PUBLICACIONES -->
+    <section class="section section--soft" id="publicaciones">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">IDEAS PARA COMPARTIR</span>
+          <h2>Escritos y publicaciones</h2>
+        </div>
+        <p>
+          Notas, reflexiones y artículos sobre psicología, maternidad,
+          crianza y bienestar.
+        </p>
+      </div>
+
+      <div class="publications-grid" id="publicationsGrid"></div>
+    </section>
+
+    <!-- TRABAJÁ CONMIGO -->
+    <section class="collaboration section" id="colaboraciones">
+      <div class="collaboration__content">
+        <span class="eyebrow">CREAMOS EN COMUNIDAD</span>
+        <h2>¿Trabajamos juntos?</h2>
+
+        <p>
+          Me encanta conectar con personas, marcas y proyectos que compartan
+          una mirada respetuosa, consciente y comprometida con el bienestar.
+        </p>
+
+        <div class="followers">
+          <strong>44.000+</strong>
+          <span>personas en nuestra comunidad</span>
+        </div>
+
+        <div class="collaboration__topics">
+          <span>Colaboraciones</span>
+          <span>Creación de contenido</span>
+          <span>Proyectos compartidos</span>
+          <span>Propuestas de trabajo</span>
+        </div>
+
+        <a href="#" id="collaborationButton" class="button button--light">
+          Enviame tu propuesta
+        </a>
+      </div>
+
+      <div class="collaboration__decoration">
+        <div class="decoration-circle">CC</div>
       </div>
     </section>
 
-    <section class="section section--tint" id="novedades" aria-labelledby="nov-t">
-      <div class="wrap wrap--narrow">
-        <header class="section__head">
-          <h2 id="nov-t">Novedades</h2>
-          <p>Cursos, talleres y avisos. Se actualiza todas las semanas.</p>
-        </header>
-        <div class="filters" id="filters" role="group" aria-label="Filtrar novedades"></div>
-        <div class="feed" id="feed"></div>
-        <button class="btn btn--ghost feed__more" id="moreBtn" hidden>Ver novedades anteriores</button>
+    <!-- CONTACTO -->
+    <section class="contact section" id="contacto">
+      <span class="eyebrow">ESTAMOS EN CONTACTO</span>
+      <h2>Sigamos conectadas</h2>
+      <p>
+        Encontrá nuestros canales de contacto y sumate a nuestra comunidad.
+      </p>
+
+      <div class="contact-links">
+        <a href="#" id="mainWhatsapp" class="contact-link" target="_blank" rel="noopener">
+          <span class="contact-link__icon">✆</span>
+          <span>
+            <strong>WhatsApp</strong>
+            <small>Escribinos directamente</small>
+          </span>
+          <span class="contact-link__arrow">↗</span>
+        </a>
+
+        <a href="#" id="communityLink" class="contact-link" target="_blank" rel="noopener">
+          <span class="contact-link__icon">♡</span>
+          <span>
+            <strong>Entre Nosotras</strong>
+            <small>Sumate a nuestra tribu de madres</small>
+          </span>
+          <span class="contact-link__arrow">↗</span>
+        </a>
+
+        <a href="#" id="instagramLink" class="contact-link" target="_blank" rel="noopener">
+          <span class="contact-link__icon">◎</span>
+          <span>
+            <strong>Instagram</strong>
+            <small>Seguinos en redes sociales</small>
+          </span>
+          <span class="contact-link__arrow">↗</span>
+        </a>
       </div>
     </section>
 
-    <section class="section" id="redes" aria-labelledby="redes-t">
-      <div class="wrap wrap--narrow">
-        <header class="section__head">
-          <h2 id="redes-t">Seguinos</h2>
-          <p>Contenido, avisos y un canal directo para consultas.</p>
-        </header>
-        <ul class="social" id="socialList"></ul>
-      </div>
-    </section>
   </main>
 
-  <footer class="footer" id="contacto">
-    <div class="wrap footer__in">
-      <p class="footer__brand">Cuidar Consciente</p>
-      <p class="footer__note" id="footerNote"></p>
-      <p class="footer__small">© <span id="year"></span> Cuidar Consciente. Todos los derechos reservados.</p>
-    </div>
+  <footer class="footer">
+    <a href="#inicio" class="brand">Cuidar <span>Consciente</span></a>
+    <p id="footerText">Un espacio de encuentro, escucha y bienestar.</p>
+    <small>© <span id="currentYear"></span> Cuidar Consciente. Todos los derechos reservados.</small>
   </footer>
 
-  <!-- Datos editables: se cargan como scripts comunes para que el sitio funcione también abriendo index.html directo -->
   <script src="data/config.js"></script>
   <script src="data/profesionales.js"></script>
-  <script src="data/novedades.js"></script>
+  <script src="data/actividades.js"></script>
+  <script src="data/publicaciones.js"></script>
   <script src="js/main.js"></script>
+
 </body>
 </html>
